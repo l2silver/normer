@@ -1,6 +1,6 @@
 {
   "name": "normer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple functions for generating entity relationship schema standard",
   "main": "dist/index.js",
   "scripts": {
@@ -40,6 +40,5 @@
     "jest": "^19.0.2",
     "chance": "^1.0.11"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
