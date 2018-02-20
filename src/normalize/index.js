@@ -6,8 +6,8 @@ type $$id = string | number;
 type $$mapOf<X> = {[key: string]: X};
 type $$idMapOf<X> = {[key: string | number]: X};
 
-type $entities = $$mapOf<$$idMapOf<Object>>
-type $relationships = $$mapOf<$$mapOf<$$idMapOf<$$id | $$id[]>>>
+type $entities = $$mapOf<{id: $$id}[]>
+type $relationships = $$mapOf<$$mapOf<{id: $$id, value: $$id | $$id[]}[]>>
 
 type $normalizeResponse = {
   entities: $entities,
@@ -74,19 +74,22 @@ const _normalizeRecursive = function (preinput: Object, entityName: string, sche
   })
 }
 
-const _addToRelationships = function (relationships, entityName, name, entityId, values) {
+const _addToRelationships = function (relationships, entityName, name, entityId, value) {
   if (!relationships[entityName]) {
     relationships[entityName] = {}
   }
   if (!relationships[entityName][name]) {
-    relationships[entityName][name] = {}
+    relationships[entityName][name] = [];
   }
-  relationships[entityName][name][entityId] = values
+  relationships[entityName][name].push({
+    id: entityId,
+    value
+  })
 }
 
 const _addToEntities = function (entities, entityName, entity, modifier, id) {
   if (!entities[entityName]) {
-    entities[entityName] = {}
+    entities[entityName] = []
   }
-  entities[entityName][id] = modifier({ ...entity, id})
+  entities[entityName].push(modifier({ ...entity, id}));
 }

@@ -46,28 +46,28 @@ describe('normalize', function () {
   it('entities', function (){
     const {entities} = normalize(input, 'articles', schema)
     expect(entities).toMatchObject({
-      articles: {
-        [input.id]: {
+      articles: [
+        {
           id: input.id,
           title: input.title,
           comments: input.comments,
         }
-      },
+      ],
     })
   })
   describe('MANY', function (){
     it('relatedEntityObject', function () {
       const {entities, relationships} = normalize(input, 'articles', schema)
       expect(entities).toMatchObject({
-        comments: {
-          [comment.id]: comment
-        }
+        comments: [
+          comment
+        ]
       })
       expect(relationships).toEqual({
         articles: {
-          comments: {
-            [input.id]: [comment.id]
-          }
+          comments: [
+            {id: input.id, value: [comment.id]}
+          ]
         }
       })
     })
@@ -76,25 +76,28 @@ describe('normalize', function () {
         article: input
       }, 'pageUsers', schema)
       expect(entities).toMatchObject({
-        comments: {
-          [comment.id]: comment
-        },
-        pages: {
-          users: {
+        comments: [
+          comment
+        ],
+        pages: [
+          {
             id: "users",
           },
-        },
+        ],
       })
       expect(relationships).toEqual({
         articles: {
-          comments: {
-            [input.id]: [comment.id]
-          }
+          comments: [{
+            id: input.id,
+            value: [comment.id]
+          }]
         },
         pages: {
-          article: {
-            ['users']: input.id,
-          },
+          article: [
+            {
+              id: 'users', value: input.id
+            }
+          ],
         },
       })
     })
@@ -103,25 +106,27 @@ describe('normalize', function () {
         const {entities, relationships} = normalize({article: 1}, 'pageUsers', schema)
         expect(relationships).toEqual({
           pages: {
-            article: {
-              users: 1
-            }
+            article: [
+              {id: 'users', value: 1}
+            ]
           }
         })
       })
       it('relatedEntityObject', function () {
         const {entities, relationships} = normalize({article: {id: 1}}, 'pageUsers', schema)
         expect(entities).toMatchObject({
-          articles: {
-            [1]: {id: 1}
-          },
-
+          articles: [
+            {id: 1}
+          ]
         })
         expect(relationships).toEqual({
           pages: {
-            article: {
-              users: 1
-            }
+            article: [
+              {
+                id: 'users',
+                value: 1
+              }
+            ]
           }
         })
       })
